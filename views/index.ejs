@@ -1,0 +1,52 @@
+<h1> <%- user %> NoteStash </h1>
+<nav>
+	<a href="login">Sign in</a>
+</nav>
+
+<div class = "uploadbox">
+	<h3>Upload a new paste:</h3><br>
+	<form id="paste" name="thing" autocomplete="off" method="post" action="/">
+		<div class = "content">
+			<textarea
+				name = "title"
+				spellcheck = true
+				cols = 60
+				rows = 1
+				placeholder="Title"></textarea>
+			<textarea
+				class="content"
+				name="content"
+				autofocus=true
+				spellcheck=false
+				rows=20
+				placeholder="Enter your paste here..."></textarea>
+			<div class = "uploadbtn">
+				<div class = "priv">
+					<button
+					name="access1"
+					value="pub"
+					type="button">Public</button>
+					<button
+					name="access2"
+					value="priv"
+					type="button">Private</button>
+					<button
+					name="access3"
+					value="secure"
+					type="button">Secure</button>
+				</div>
+				<button
+				type="submit"
+				formmethod="POST"
+				form="paste">Upload</button>
+			</div>
+			<textarea
+				name="desc"
+				cols=90
+				rows=10
+				placeholder="Description"
+				form="paste"></textarea>
+			
+		</div>
+	</form>
+</div>

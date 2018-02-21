@@ -1,0 +1,32 @@
+<div class = "uploadbox">
+	<h1><%= title %></h1><br>
+	<form id="paste" name="thing" autocomplete="off" method="post" action="/update">
+	<a href="/">Back to noteStash</a>
+		<div class = "content">
+			<textarea
+				name = "title"
+				spellcheck = true
+				cols = 60
+				rows = 1
+				placeholder="You can change your title here"></textarea>
+			<textarea
+				class="content"
+				name="content"
+				autofocus=true
+				spellcheck=false
+				rows=20
+				placeholder="If your paste is missing, send a mail to hoodedice"><%- paste %></textarea>
+			<textarea
+				name="desc"
+				cols=90
+				rows=10
+				placeholder="You entered no description =("><%- description %></textarea>
+				<div class = "uploadbtn">
+					<button
+					type="submit"
+					formmethod="POST"
+					form="paste">Update</button>
+				</div>
+		</div>
+	</form>
+</div>
