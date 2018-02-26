@@ -61,9 +61,4 @@ if (app.get('env') === 'development') {
 });
 */
 
-//say something when POST detected
-/*app.post('/', function(req, res){
-  res.send("received something!");
-});*/
-
 module.exports = app;
