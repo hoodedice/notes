@@ -4,14 +4,11 @@
 
 var express = require('express');
 var router = express.Router();
-var randString = require('random-string');
+
 var entities = require('html-entities').AllHtmlEntities;
 var mysql = require('mysql2');
-//var passport = require('passport');
 var bcrypt = require('bcrypt');
-//var Redis = require('ioredis');
-//var session = require('express-session');
-var moment = require('moment');
+var session = require('express-session');
 
 const saltRounds = 14;
 
