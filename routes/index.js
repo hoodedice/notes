@@ -10,6 +10,8 @@ var mysql = require('mysql2');
 var bcrypt = require('bcrypt');
 var session = require('express-session');
 
+var uuid = require('./uuidmodule');
+
 const saltRounds = 14;
 
 Entity = new entities();
@@ -51,10 +53,12 @@ function connect(){
 
 //Router renders
 router.get('/index', function(req, res, next){
+  
   res.redirect('/');
 })
 
 router.get('/', function(req, res, next) {
+  console.log(uuid.generateUUID());
   res.render('index.ejs', {user: userNamess});
 });
 
