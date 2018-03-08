@@ -1,5 +1,9 @@
 .vscode
 jsconfig.json
+*.mwb.bak
+*.md
+*.md.sql
+
 # Logs
 logs
 *.log
