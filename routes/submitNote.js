@@ -6,9 +6,9 @@ var router = express.Router();
  * Should only be called by callback of router.post('/'...
  * sb is the callback function for this function
  */
-function submitNote(note, cb, res) {
-    INSERTNOTEquery = 'INSERT INTO `pastes` VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    CONNECTUSER = 'INSERT INTO `userpaste` VALUES(?, ?, ?)';
+function SubmitNote(note, cb, res) {
+    const INSERTNOTEquery = 'INSERT INTO `pastes` VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const CONNECTUSER = 'INSERT INTO `userpaste` VALUES(?, ?, ?)';
   
   
     console.log(thisNote.dump());
@@ -37,24 +37,24 @@ function submitNote(note, cb, res) {
   }
 
   router.post('/', function (req, res, next) {
-    thisNote = new newNote();
+    var thisNote = new newNote();
     //bare minimum required content to upload is just the paste
     if (req.body.content != "") {
-      //prepare the note -- have to replace empty strings with prefilled vales
+      //prepare the note -- have to replace empty strings with prefilled values
       //Generate a unique URL
       var uniqURL = randString({ length: 32 });
       console.log(uniqURL);
-  
+
       thisNote.uid = uniqURL;
       thisNote.content = Entity.encode(req.body.content);
       if (req.body.title != "") thisNote.title = req.body.title;
       if (req.body.desc != "") thisNote.description = req.body.desc;
       //TODO Async this!
-      submitNote(thisNote, function (res) {
+      SubmitNote(thisNote, function (res) {
         //redirect user to their submitted paste
         res.redirect('/pastes/' + luser + uniqURL);
-      }, res);
+      });
     }
   });
-  
+
 module.exports = router;

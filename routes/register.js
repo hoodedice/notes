@@ -27,7 +27,7 @@ async function CheckForPreExistingUsers(username, email) {
   }
 }
 
-async function addNewUser(params) {
+async function AddNewUser(params) {
   const ADDNEWUSERquery = 'CALL addUser(?, ?, ?, ?)';
   try {
     const results = await db.connect(ADDNEWUSERquery, params);
@@ -55,7 +55,7 @@ router.post('/', async function (req, res) {
       const passwordHash = await psw.hashPassword(req.body.password);
       console.log(passwordHash);
       const params = [req.body.username, req.body.email, passwordHash, date.getCurrentDateTime()];
-      const results = await addNewUser(params);
+      const results = await AddNewUser(params);
     }
   } catch (err) {
     throw err;

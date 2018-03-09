@@ -45,13 +45,17 @@ var luser = "";
 //Router renders
 
 //simply redirect /index to /
-router.get('/index', function(req, res, next){
+router.get('/index', function (req, res, next) {
   next();
 })
 
 router.get('/', function (req, res, next) {
   console.log(uuid.generateUUID());
-  res.render('index.ejs', { user: userNamess });
+  if (req.session.user != null) {
+    res.render('index.ejs', { user: req.session.user.name + "'s"});
+  } else {
+    res.render('index.ejs', { user: null });
+  }
 });
 
 router.get('stylesheets/normalize.min.css', function (req, res) {

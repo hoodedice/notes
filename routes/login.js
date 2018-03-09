@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-
-
 var db = require('./Database');
 var psw = require('./Password');
 
@@ -52,6 +50,9 @@ router.post('/', async function (req, res) {
       if (result) {
         //TODO: log them in
         console.log("successful!");
+        req.session.user = {
+          name: req.body.username
+        };
         res.redirect('/index');
       } else {
         //password isn't present on the database

@@ -6,8 +6,17 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var partials = require('express-partials');
 
+var redis = require('redis');
 var sessions = require('express-session');
 var store = require('connect-redis')(sessions);
+
+var sess = {
+  host: 'localhost',
+  port: 6379,
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+}
 
 var index = require('./routes/index');
 var login = require('./routes/login');
@@ -15,6 +24,8 @@ var register = require('./routes/register');
 var users = require('./routes/users');
 
 var app = express();
+
+app.use(sessions(sess));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,17 +48,6 @@ app.use('/register', register);
 app.use('/login', login);
 app.use('/users', users);
 
-var sess = {
-  secret: 'keyboard cat',
-}
- 
-if (app.get('env') === 'production') {
-  app.set('trust proxy', 1) // trust first proxy
-  sess.cookie.secure = true // serve secure cookies
-}
- 
-app.use(sessions(sess));
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -56,7 +56,10 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
-
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
