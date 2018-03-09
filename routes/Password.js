@@ -11,4 +11,11 @@ module.exports.hashPassword = async function (password) {
   }
 }
 
-module.exports.comparePassword
+module.exports.comparePassword = async function (password, hash) {
+  try {
+    const result = await bcrypt.compare(password, hash);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+}

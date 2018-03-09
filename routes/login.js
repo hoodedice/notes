@@ -1,59 +1,98 @@
 var express = require('express');
 var router = express.Router();
 
-function checkUserName(username, res) {
-  USERNAMEquery = 'SELECT `localid` FROM `usercreds` WHERE `localid` = ?';
-  var db = connect();
 
-  db.execute(USERNAMEquery, [username], function (err, rows, fields) {
-    if (err) {
-      throw err;
-    }
-    else if (rows.length == 0) {
+
+var db = require('./Database');
+var psw = require('./Password');
+
+
+router.get('/', function (req, res, next) {
+  res.render('login.ejs');
+  console.log("login page is accessible");
+});
+
+
+async function CheckUsername(username) {
+  const USERNAMEquery = 'SELECT `password` FROM `users` WHERE `username` = ?';
+  try {
+    const passwordHash = await db.connect(USERNAMEquery, [username]);
+    const rows = await passwordHash[0];
+    console.log("rows length: " + rows.length);
+    if (rows.length == 0) {
       console.log("couldn't find the username");
-      res.redirect('/login.html');
+      return null;
+    } else if (rows.length > 1) {
+      throw new Error("something weird happened: checkUserName(): Login.js");
+    } else {
+      console.log(rows);
+      return await rows[0].password;
     }
-    else if (rows.length > 1) {
-      //there was more than one id with the same username in the db
-      //which is impossible, but in case it happens
-      console.log("something happened");
-      res.redirect('/login.html');
-    }
-    db.end();
-  });
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function AuthenticateUser(username, password, hash) {
 
 }
 
 /**login.html*/
-router.post('/login', function (req, res, next) {
+router.post('/', async function (req, res) {
 
-  LOGINquery = 'SELECT `localpwd` FROM `usercreds` WHERE `localid` = ?';
-
-  var db = connect();
-
-  db.execute(LOGINquery, [req.body.userid], function (err, rows, fields) {
-    if (!rows.length) res.redirect('/login');
-    if (err) throw err;
-    else {
-      bcrypt.compare(req.body.password, rows[0].localpwd, function (err, result) {
-        if (result == true) {
-          console.log(req.session);
-          userName = req.body.userid;
-          req.session.userName = req.body.userid;
-          userNamess = userName + "'s";
-          luser = userName + "/";
-          console.log(req.session);
-          console.log("success!");
-          res.redirect('/');
-        }
-        else {
-          console.log("wrong password");
-          res.redirect('/login');
-        }
-      });//bcrypt
+  try {
+    console.log("checkusername: " + req.body.username);
+    const hash = await CheckUsername(req.body.username);
+    console.log(hash);
+    if (hash != null) {
+      //username was found on the database
+      console.log("password: " + hash);
+      const result = await psw.comparePassword(req.body.password, hash);
+      console.log(result);
+      if (result) {
+        //TODO: log them in
+        console.log("successful!");
+        res.redirect('/index');
+      } else {
+        //password isn't present on the database
+        //TODO: indicate to the user that the password they typed in is incorrect
+        console.log("password is incorrect");
+        res.redirect('back');
+      }
+    } else if (hash == null) {
+      //username isn't present on the database
+      //TODO: indicate to the user that the username they typed in is incorrect
+      res.redirect('back');
+    } else {
+      throw new Error("something weird happened: Router.Post: Login.js");
     }
-    db.end();
-  });//LOGINquery
+  } catch (err) {
+    throw err;
+  }
+
+  // db.execute(LOGINquery, [req.body.userid], function (err, rows, fields) {
+  //   if (!rows.length) res.redirect('/login');
+  //   if (err) throw err;
+  //   else {
+  //     bcrypt.compare(req.body.password, rows[0].localpwd, function (err, result) {
+  //       if (result == true) {
+  //         console.log(req.session);
+  //         userName = req.body.userid;
+  //         req.session.userName = req.body.userid;
+  //         userNamess = userName + "'s";
+  //         luser = userName + "/";
+  //         console.log(req.session);
+  //         console.log("success!");
+  //         res.redirect('/');
+  //       }
+  //       else {
+  //         console.log("wrong password");
+  //         res.redirect('/login');
+  //       }
+  //     });//bcrypt
+  //   }
+  //   db.end();
+  // });//LOGINquery
 
 
 });

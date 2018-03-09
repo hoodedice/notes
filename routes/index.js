@@ -44,6 +44,11 @@ var luser = "";
 
 //Router renders
 
+//simply redirect /index to /
+router.get('/index', function(req, res, next){
+  next();
+})
+
 router.get('/', function (req, res, next) {
   console.log(uuid.generateUUID());
   res.render('index.ejs', { user: userNamess });
@@ -57,36 +62,7 @@ router.get('stylesheets/style.css', function (req, res) {
   res.sendFile('/public/stylesheets/style.css');
 })
 
-router.get('/login', function (req, res, next) {
 
-  //TODO Call a function to do some backend stuff before we send it over
-  //TODO Rather, we need to push the file below into that function, and THEN modify
-  // it within that function itself
-  res.render('login.ejs');
-  console.log("login page is accessible");
-});
-
-
-router.post('/', function (req, res, next) {
-  thisNote = new newNote();
-  //bare minimum required content to upload is just the paste
-  if (req.body.content != "") {
-    //prepare the note -- have to replace empty strings with prefilled vales
-    //Generate a unique URL
-    var uniqURL = randString({ length: 32 });
-    console.log(uniqURL);
-
-    thisNote.uid = uniqURL;
-    thisNote.content = Entity.encode(req.body.content);
-    if (req.body.title != "") thisNote.title = req.body.title;
-    if (req.body.desc != "") thisNote.description = req.body.desc;
-    //TODO Async this!
-    submitNote(thisNote, function (res) {
-      //redirect user to their submitted paste
-      res.redirect('/pastes/' + luser + uniqURL);
-    }, res);
-  }
-});
 
 router.get('/pastes/:userName/:uniqURL', function (req, res, next) {
   findquery = 'SELECT * FROM `userpaste` WHERE `uid` = ? AND localid = ?';
