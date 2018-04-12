@@ -6,7 +6,7 @@ var router = express.Router();
  * Should only be called by callback of router.post('/'...
  * sb is the callback function for this function
  */
-function SubmitNote(note, cb, res) {
+async function SubmitNote(note, cb, res) {
     const INSERTNOTEquery = 'INSERT INTO `pastes` VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const CONNECTUSER = 'INSERT INTO `userpaste` VALUES(?, ?, ?)';
   
@@ -36,7 +36,7 @@ function SubmitNote(note, cb, res) {
     });
   }
 
-  router.post('/', function (req, res, next) {
+  router.post('/', async function (req, res, next) {
     var thisNote = new newNote();
     //bare minimum required content to upload is just the paste
     if (req.body.content != "") {
