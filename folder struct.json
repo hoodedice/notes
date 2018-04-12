@@ -1,0 +1,5 @@
+{
+    "root" : ["code", "snippets", "misc"],
+    "code" : ["notes", "gamenplan"],
+    "snippets" : ["rpg story"]
+}
