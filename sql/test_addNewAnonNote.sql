@@ -6,7 +6,7 @@ use notesDB;
 	note TEXT,
 	title VARCHAR(512),
 	filetype VARCHAR(5), 
-	description TEXT, 
+	description TEXT,  
 	language_id SMALLINT,
 	wrap_style BINARY,
     indent_style BINARY,
@@ -15,6 +15,7 @@ use notesDB;
     folder TEXT, -- actually JSON
     tags TEXT -- actually JSON
 ) **/
+INSERT IGNORE INTO `notesDB`.`users` (`username`, `email`, `fname`, `lname`, `password`, `join_date`) VALUES ("anon", "anon@hoodedice.net", NULL, NULL, "0", NOW());
 
 CALL `addNewAnonNote`("12345678901234", NOW(), "blah blah", null, null, null, null, '0', '0', 4, '0', '{"a": 4}', '{"b": 3}');
 
@@ -22,4 +23,4 @@ SELECT * FROM `notes_versions`;
 SELECT * FROM `versions`;
 
 DELETE FROM `notesDB`.`versions` WHERE `note_id`='12345678901234' and`revision`='1';
-DELETE FROM `notesDB`.`notes_versions` WHERE `note_id`='12345678901234' and`username`='anon';
+DELETE FROM `notesDB`.`notes_versions` WHERE `note_id`='12345678901234' and`user_id`='1';

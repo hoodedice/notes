@@ -1,3 +1,4 @@
+/**@deprecated */
 getCurrentDate = function() {
     var TimeStampNow = new Date();
     var thisDate = TimeStampNow.getUTCDate();
@@ -11,6 +12,7 @@ getCurrentDate = function() {
     return thisNotesTimeStamp;
 }
 
+/** @deprecated */
 module.exports.getCurrentDateTime = function() {
     var DateTimeStampNow = new Date();
 
@@ -29,6 +31,7 @@ module.exports.getCurrentDateTime = function() {
     return thisNotesTimeStamp;
 }
 
+/** @deprecated */
 // https://stackoverflow.com/a/1349426
 function getRandomIdentifier() {
     var identifier = "";
@@ -40,6 +43,7 @@ function getRandomIdentifier() {
     return identifier;
 }
 
+/** @deprecated */
 module.exports.generateUUID = function generateUUID() {
     return getCurrentDate() + getRandomIdentifier();
 }

@@ -11,7 +11,7 @@ var session = require('express-session');
 
 var uuid = require('./DateUUID');
 
-
+var Note = require("./Note").Note;
 
 const saltRounds = 14;
 
@@ -22,25 +22,6 @@ var userName = "";
 var userNamess = "";
 var luser = "";
 
-/* set up all third party connections */
-
-
-
-
-/* set up express-session, connect to redis */
-/*router.use(session({
-    userName: "",
-    secret: '',4h
-    cookie: { maxAge: 2628000000 },
-    genid: function(req){
-      return "test";
-    },
-    store: new (require('express-sessions'))({
-        storage: 'redis',
-    })
-}));
-
-*/
 
 //Router renders
 
@@ -50,7 +31,6 @@ router.get('/index', function (req, res, next) {
 })
 
 router.get('/', function (req, res, next) {
-  console.log(uuid.generateUUID());
   if (req.session.user != null) {
     res.render('index.ejs', { user: req.session.user.name + "'s"});
   } else {

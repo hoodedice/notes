@@ -10,6 +10,13 @@ var redis = require('redis');
 var session = require('express-session');
 var store = require('connect-redis')(session);
 
+var index = require('./routes/index');
+var login = require('./routes/login');
+var register = require('./routes/register');
+var users = require('./routes/users');
+
+var app = express();
+
 if (app.get('env') === 'production') {
   var sess = {
     store: new store({
@@ -41,13 +48,6 @@ if (app.get('env') === 'development') {
     logErrors: true
   }
 }
-
-var index = require('./routes/index');
-var login = require('./routes/login');
-var register = require('./routes/register');
-var users = require('./routes/users');
-
-var app = express();
 
 app.use(session(sess));
 

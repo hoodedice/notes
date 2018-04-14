@@ -1,60 +1,61 @@
 var express = require('express');
 var router = express.Router();
+var entity = require('html-entities');
+
+var Note = require("./Note").Note;
 
 /** submitNote 
  * send the new paste to the databasthrowe
  * Should only be called by callback of router.post('/'...
- * sb is the callback function for this function
  */
-async function SubmitNote(note, cb, res) {
-    const INSERTNOTEquery = 'INSERT INTO `pastes` VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    const CONNECTUSER = 'INSERT INTO `userpaste` VALUES(?, ?, ?)';
-  
-  
-    console.log(thisNote.dump());
-    if (userName != "") {
-      thisNote.isprivate = 1;
+async function SubmitNewAnonNote(note) {
+  const SENDANONNOTEquery = 'CALL `addNewAnonNote`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+  var inserts = note.getNoteForDB();
+
+
+  db.execute(INSERTNOTEquery, thisNote.dump(), function (err, rows, fields) {
+    if (err) throw err;
+    else {
+      console.log("success");
     }
-    var inserts = [thisNote.dump()];
-  
-    var db = connect();
-  
-  
-    db.execute(INSERTNOTEquery, thisNote.dump(), function (err, rows, fields) {
-      if (err) throw err;
-      else {
+    if (userName != "") {
+      db.execute(CONNECTUSER, [thisNote.uid, userName, 1], function (err, rows, fields) {
+        if (err) throw err;
+        console.log("success with logged in person");
+      })
+    }
+    db.end();
+    callback = cb(res);
+  });
+}
+
+router.post('/', async function (req, res, next) {
+  //bare minimum required content to upload is just the paste
+  try {
+    if (req.body.content != "") {
+      let note = new Note(
+        entity.encode(req.body.content),
+        req.session.username,
+        req.body.indent_style,
+        req.body.indent_size,
+        req.body.is_private,
+        req.body.folder,
+        req.body.tags,
+        entity.encode(req.body.title),
+        req.body.filetype,
+        entity.encode(req.body.description),
+        entity.encode(req.body.language),
+        req.body.wrap_style
+      );
+      if (req.session.user == null) {
+        const result = await SubmitNewAnonNote(note);
+        //redirect user to their submitted paste
+        //res.redirect('/pastes/' + luser + uniqURL);
         console.log("success");
       }
-      if (userName != "") {
-        db.execute(CONNECTUSER, [thisNote.uid, userName, 1], function (err, rows, fields) {
-          if (err) throw err;
-          console.log("success with logged in person");
-        })
-      }
-      db.end();
-      callback = cb(res);
-    });
-  }
-
-  router.post('/', async function (req, res, next) {
-    var thisNote = new newNote();
-    //bare minimum required content to upload is just the paste
-    if (req.body.content != "") {
-      //prepare the note -- have to replace empty strings with prefilled values
-      //Generate a unique URL
-      var uniqURL = randString({ length: 32 });
-      console.log(uniqURL);
-
-      thisNote.uid = uniqURL;
-      thisNote.content = Entity.encode(req.body.content);
-      if (req.body.title != "") thisNote.title = req.body.title;
-      if (req.body.desc != "") thisNote.description = req.body.desc;
-      //TODO Async this!
-      SubmitNote(thisNote, function (res) {
-        //redirect user to their submitted paste
-        res.redirect('/pastes/' + luser + uniqURL);
-      });
     }
-  });
+  } catch (err) { throw err; }
+});
 
 module.exports = router;

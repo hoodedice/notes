@@ -1,4 +1,4 @@
-module.exports.connect = async function (query, params) {
+module.exports.connect = async function(query, params) {
   // get the client
   const mysql = require('mysql2/promise');
   // create the connection

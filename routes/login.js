@@ -10,7 +10,12 @@ router.get('/', function (req, res, next) {
   console.log("login page is accessible");
 });
 
-
+/**
+ * @function CheckUsername
+ * 
+ * @param {string} username 
+ * @returns {Promise | password }
+ */
 async function CheckUsername(username) {
   const USERNAMEquery = 'SELECT `password` FROM `users` WHERE `username` = ?';
   try {
@@ -21,7 +26,7 @@ async function CheckUsername(username) {
       console.log("couldn't find the username");
       return null;
     } else if (rows.length > 1) {
-      throw new Error("something weird happened: checkUserName(): Login.js");
+      throw new Error("something weird happened: checkUserName(): login.js");
     } else {
       console.log(rows);
       return await rows[0].password;
@@ -30,9 +35,15 @@ async function CheckUsername(username) {
     throw err;
   }
 }
-
+/**
+ * @function AuthenticateUser
+ * 
+ * @param {any} username 
+ * @param {any} password 
+ * @param {any} hash 
+ */
 async function AuthenticateUser(username, password, hash) {
-
+  
 }
 
 /**login.html*/
