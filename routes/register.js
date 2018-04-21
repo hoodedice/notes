@@ -4,6 +4,8 @@ var date = require('./DateUUID');
 var db = require('./Database');
 var psw = require('./Password');
 
+var User = require('./User').User;
+
 router.get('/', function (req, res) {
   res.render('register.ejs');
 });
@@ -19,7 +21,7 @@ async function CheckForPreExistingUsers(username, email) {
       // console.log(Object.prototype.toString.call(rows));
       return false;
     } else {
-      console.log("we're good to go!");  //return function;
+      //console.log("we're good to go!");  //return function;
       return true;
     }
   } catch (err) {
@@ -37,24 +39,24 @@ async function AddNewUser(params) {
 }
 
 router.post('/', async function (req, res) {
-  //  var datenow = uuid.getCurrentDateTime();
-
-  var returnstatus = 1;
 
   //check if the username or email already exist in the db
   try {
     const results = await CheckForPreExistingUsers(req.body.username, req.body.email);
     if (results == false) {
-      //TODO: Expand on this - need to properly indicate to client that the username or email they were using already exists
+      //TODO: Expand on this - need to properly indicate to client that 
+      //TODO: the username or email they were using already exists
       //TODO: Use AJAX if possible.
-      console.log("username or email was found");
+      //console.log("username or email was found");
       res.redirect('back');
     } else {
       //TODO: _Actually_ insert the new user in the db. Use addNewUser()
       res.redirect('/');
       const passwordHash = await psw.hashPassword(req.body.password);
-      console.log(passwordHash);
-      const params = [req.body.username, req.body.email, passwordHash, date.getCurrentDateTime()];
+      //console.log(passwordHash);
+
+      let user = new User(req.body.username, req.body.email);
+      const params = [user.username, user.email, passwordHash, user.join_date];
       const results = await AddNewUser(params);
     }
   } catch (err) {

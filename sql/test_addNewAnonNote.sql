@@ -15,9 +15,9 @@ use notesDB;
     folder TEXT, -- actually JSON
     tags TEXT -- actually JSON
 ) **/
-INSERT IGNORE INTO `notesDB`.`users` (`username`, `email`, `fname`, `lname`, `password`, `join_date`) VALUES ("anon", "anon@hoodedice.net", NULL, NULL, "0", NOW());
+INSERT IGNORE INTO `notesDB`.`users` (`username`, `email`, `fname`, `lname`, `password`, `join_date`) VALUES ("anon", "anon@hoodedice.net", NULL, NULL, "0", "2018-04-14T14:26:36");
 
-CALL `addNewAnonNote`("12345678901234", NOW(), "blah blah", null, null, null, null, '0', '0', 4, '0', '{"a": 4}', '{"b": 3}');
+CALL `addNewAnonNote`("20180414ytVWLI", "2018-04-14T14:26:36", "blah blah test", "Untitled", "txt", null, null, '0', '0', 4, '0', '{"a": 4}', '{"b": 3}');
 
 SELECT * FROM `notes_versions`;
 SELECT * FROM `versions`;

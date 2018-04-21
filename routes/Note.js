@@ -16,20 +16,22 @@ module.exports.Note = class {
      * @param {string=} [language]
      * @param {boolean=} [wrap_style]
      */
-    constructor(content, user, indent_style, indent_size, is_private, folder, tags, title, filetype, description, language, wrap_style) {
+    constructor(content, username, indent_style, 
+        indent_size, is_private, folder, tags, title, filetype, description,
+        language, wrap_style, datetime, note_id) {
         this.content = content;
-        this.datetime = this.getDateNow();
-        this.note_id = this.generateIdentifier(this.datetime);
+        this.datetime = datetime || this.getDateNow();
+        this.note_id = note_id || this.generateIdentifier(this.datetime);
         this.username = user || 1;
-        this.indent_size = indent_style || 0;
+        this.indent_style = indent_style || 0;
         this.indent_size = indent_size || 4;
         this.is_private = is_private || 0;
-        this.folder = folder || "{ root }";
-        this.tags = tags || "";
+        this.folder = folder || { "root" : [] };
+        this.tags = tags || "{}";
         this.title = title || "Untitled";
         this.filetype = filetype || "txt";
         this.description = description;
-        this.language = language || "plaintext";
+        this.language = language || "";
         this.wrap_style = wrap_style || 0;
     }
 
@@ -37,11 +39,12 @@ module.exports.Note = class {
     //Date().toISOString() : credits to gustorn from the Claano Collective Discord server
     /** @private */
     getDateNow() {
-        return new Date().toISOString();
+        let datetime = new Date().toISOString();
+        return datetime.slice(0, 20);
     }
 
     getNoteForDB() {
-        return new [
+        let contents = [
             this.note_id, 
             this.datetime, 
             this.content, 
@@ -56,6 +59,18 @@ module.exports.Note = class {
             this.folder,
             this.tags
         ];
+        //force undefined or empty string to be null, since mysql2 requires JS null
+        var key = ""
+        for (key in contents) {
+            //console.log("before: " + contents[key]);
+            if (contents[key] == null || contents[key] === "") {
+                contents[key] = null; 
+            }
+            //TODO: remove
+            contents.language = 0;
+            //console.log(contents[key]);
+        }
+        return contents;
     }
 
     /** @private */

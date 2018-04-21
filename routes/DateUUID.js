@@ -27,7 +27,7 @@ module.exports.getCurrentDateTime = function() {
         DateTimeStampNow.getUTCMinutes() + ":" + 
         DateTimeStampNow.getUTCSeconds();
         
-    console.log("The datetime now is " + DateTimeStampNow);
+    //console.log("The datetime now is " + DateTimeStampNow);
     return thisNotesTimeStamp;
 }
 
