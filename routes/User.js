@@ -1,8 +1,7 @@
-
 module.exports.User = class {
   constructor(username, email, id, fname, lname, join_date) {
     this.id = id || 0;
-    this.username = username;
+    this.name = username;
     this.email = email;
     this.fname = fname || null;
     this.lname = lname || null;

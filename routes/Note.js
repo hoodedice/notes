@@ -1,4 +1,3 @@
-
 /** Class representing a Note */
 module.exports.Note = class {
     /**
@@ -22,7 +21,7 @@ module.exports.Note = class {
         this.content = content;
         this.datetime = datetime || this.getDateNow();
         this.note_id = note_id || this.generateIdentifier(this.datetime);
-        this.username = user || 1;
+        this.username = username || "anon";
         this.indent_style = indent_style || 0;
         this.indent_size = indent_size || 4;
         this.is_private = is_private || 0;

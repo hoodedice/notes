@@ -6,19 +6,27 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var partials = require('express-partials');
 
+/* session */
 var redis = require('redis');
 var session = require('express-session');
 var store = require('connect-redis')(session);
 
+/*routes */
 var index = require('./routes/index');
-var login = require('./routes/login');
+var authenticate = require('./routes/authenticate');
 var register = require('./routes/register');
-//var user = require('./routes/User');
 var submitNote = require('./routes/submitNote');
 var viewNote = require('./routes/viewNote');
 
 var app = express();
 
+/* socket.io */
+var sockserver = require('http').Server(app);
+const io = require('socket.io')(sockserver);
+
+sockserver.listen(3987);
+
+/* session setup */
 if (app.get('env') === 'production') {
   var sess = {
     store: new store({
@@ -68,13 +76,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + "/stylesheets/"));
 app.use(express.static(path.join(__dirname, '/public')));
 
+app.use('/register', register);
+app.use('/authenticate', authenticate);
+app.use('/submitNote', submitNote);
 app.use('/index', index);
 app.use('/', viewNote);
 app.use('/', index);
-app.use('/register', register);
-app.use('/login', login);
-//app.use('/users', users);
-app.use('/submitNote', submitNote);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

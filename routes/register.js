@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var date = require('./DateUUID');
 var db = require('./Database');
 var psw = require('./Password');
 
@@ -56,7 +55,7 @@ router.post('/', async function (req, res) {
       //console.log(passwordHash);
 
       let user = new User(req.body.username, req.body.email);
-      const params = [user.username, user.email, passwordHash, user.join_date];
+      const params = [user.name, user.email, passwordHash, user.join_date];
       const results = await AddNewUser(params);
     }
   } catch (err) {

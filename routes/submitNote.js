@@ -5,14 +5,12 @@ var entity = require('html-entities').AllHtmlEntities;
 var db = require("./Database");
 var Note = require("./Note").Note;
 
-/** submitNote 
- */
-async function SubmitNewNote(note) {
-  const SUBMITNOTEquery = 'CALL `addNewAnonNote`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+/* submitNote */
+async function SubmitNewNote(note, user_id) {
+  const SUBMITNOTEquery = 'CALL `addNewAnonNote`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
   var inserts = note.getNoteForDB();
-  //console.log(note.note_id);
-  //console.log(inserts);
+  inserts.push(user_id)
 
   try {
     const result = await db.connect(SUBMITNOTEquery, inserts);
@@ -22,33 +20,38 @@ async function SubmitNewNote(note) {
 }
 
 router.post('/', async function (req, res, next) {
-    //bare minimum required content to upload is just the paste
+  //bare minimum required content to upload is just the paste
+  if (req.body.content != "") {
+    let note = returnNewNote(req);
     try {
-      if (req.body.content != "") {
-        let note = new Note(
-          entity.encode(req.body.content),
-          req.session.username,
-          req.body.indent_style,
-          req.body.indent_size,
-          req.body.is_private,
-          req.body.folder,
-          req.body.tags,
-          entity.encode(req.body.title),
-          req.body.filetype,
-          entity.encode(req.body.description),
-          entity.encode(req.body.language),
-          req.body.wrap_style
-        );
-
-        if (req.session.user == null) {
-          const result = await SubmitNewNote(note);
-          //redirect user to their submitted paste
-          //res.redirect('/pastes/anon/' + uniqURL);
-          //console.log("success");
-          res.redirect('/index');
-        }
+      //submit note and redirect user to their submitted paste
+      if (req.session.user == null) {
+        const result = await SubmitNewNote(note, 1);
+        res.redirect('/anon/' + note.note_id);
+      } else {
+        const result = await SubmitNewNote(note, req.session.user.id);
+        res.redirect('/' + req.session.user.name + '/' + note.note_id);
       }
     } catch (err) { throw err; }
-  });
+  }
+});
 
-  module.exports = router;
+function returnNewNote(req) {
+  if (req.session.user == null) var user = null;
+  return new Note(
+    entity.encode(req.body.content),
+    user,
+    req.body.indent_style,
+    req.body.indent_size,
+    req.body.is_private,
+    req.body.folder,
+    req.body.tags,
+    entity.encode(req.body.title),
+    req.body.filetype,
+    entity.encode(req.body.description),
+    entity.encode(req.body.language),
+    req.body.wrap_style
+  );
+}
+
+module.exports = router;
