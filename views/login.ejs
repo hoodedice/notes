@@ -1,3 +1,7 @@
+<% if (message != null) { %>
+	<%- "<div class = \"animated-banner banner-error slideOutUp\">" -%> <%- message -%> <%- "</div>" -%>
+<% } %>
+
 <a href="/"><h3>Back to NoteStash</h3></a>
 
 <div class = "l_login">
@@ -5,20 +9,22 @@
 	<form id="l_login" name="l_login" method="POST" autocomplete="off" action="/authenticate/login">
 		<input type = "text"
 			autofocus = true
-			autocapitalize non standard = none
-			autocorrect non standard = none
+			autocomplete = "username"
 			class = "username"
 			name = "username"
 			spellcheck = "false"
 			rows = 1
-			placeholder = "username"></input>
+			placeholder = "username"
+			required=""></input>
 		<input type = "password"
+			autocomplete = "off"
 			name = "password"
-			placeholder = "password"></input>
+			placeholder = "password"
+			required=""></input>
 		<button type="submit"
 		formmethod="POST">Log in</button>
 	</form>
 	<div class = "register">
-		<a href="register">Need to sign up?</a>
+		<a href = "register">Need to sign up?</a>
 	</div>
 </div>

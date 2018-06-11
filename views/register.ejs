@@ -1,3 +1,7 @@
+<% if (message != null) { %>
+	<%- "<div class = \"animated-banner banner-error slideOutUp\">" -%> <%- message -%> <%- "</div>" -%>
+<% } %>
+
 <a href="index"><h3>Back to NoteStash</h3></a>
 
 <div class = "l_login">
@@ -7,6 +11,7 @@
 			autofocus = true
 			autocapitalize non standard = none
 			autocorrect non standard = none
+			autocomplete = username
 			name = "username"
 			spellcheck = "false"
 			rows = 1
