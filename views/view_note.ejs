@@ -1,28 +1,26 @@
-<div class = "uploadbox">
-	<h1><%= title %></h1><br>
+<div class="uploadbox">
+	<h1>
+		<%= title %>
+	</h1>
+	<br>
 	<form id="paste" name="thing" autocomplete="off" method="post" action="/update">
-		<div class = "content">
+
+		<div class="datetime-container">
+			<p> Uploaded on <span class="datetime"><%= t_uploaded.toUTCString() %></span>
+				<span class="datetimeUTC" ><%= t_uploaded %></span>
+			</p>
+		</div>
+		<div class="content">
 			<!-- <textarea
 				name = "title"
 				spellcheck = true
 				cols = 60
 				rows = 1
 				placeholder="You can change your title here"><%- title %> </textarea> -->
-			<textarea 
-				readonly=true
-				class="content"
-				name="content"
-				autofocus=true
-				spellcheck=false
-				rows=20
-				placeholder="If your paste is missing, send a mail to hoodedice"><%- content %></textarea>
-			<textarea
-				name="desc"
-				cols=90
-				rows=10
-				readonly=true
-				placeholder="No description =("><%- description %></textarea>
-				<!-- <div class = "uploadbtn">
+			<textarea readonly=true class="content" name="content" autofocus=true spellcheck=false
+			 rows=20 placeholder="If your paste is missing, send a mail to hoodedice"><%- content %></textarea>
+			<textarea name="desc" cols=90 rows=10 readonly=true placeholder="No description =("><%- description %></textarea>
+			<!-- <div class = "uploadbtn">
 					<button
 					type="submit"
 					formmethod="POST"
@@ -31,5 +29,9 @@
 		</div>
 	</form>
 </div>
-<br><br><br>
+
+<script src="/javascripts/DateInClientTimeZone.js"></script>
+<br />
+<br />
+<br />
 <a href="/">Back to noteStash</a>

@@ -24,7 +24,6 @@ var app = express();
 var sockserver = require('http').Server(app);
 const io = require('socket.io')(sockserver);
 
-sockserver.listen(3987);
 
 /* session setup */
 if (app.get('env') === 'production') {
@@ -74,6 +73,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(cookieParser());
 
 app.use(express.static(__dirname + "/stylesheets/"));
+app.use(express.static(__dirname + "/javascripts/"));
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.use('/register', register);
