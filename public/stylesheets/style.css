@@ -49,7 +49,7 @@ hr.footer {
 
 a {
     font-size: 1.5em;
-    color: coral;
+    color: #ff7f50;
     font-family: sans-serif;
     text-decoration: none;
 }
@@ -70,6 +70,13 @@ button {
     border-color: white;
 }
 
+.banner-error {
+    font-size: 1.25em;
+    margin-left: 0%;
+    background-color: #ff0000;
+    color: white;
+}
+
 .l_login {
     position: relative;
     margin-left:20%;
@@ -82,6 +89,14 @@ button {
     width:20%;
 }
 
+.log_in input:required {
+    border: solid 0.25px #3C9FB5;
+}
+
+.l_login input:required:invalid {
+    border: 0.25px solid #ff0000;
+}
+
 .l_login input {
     background-color: #1a1a1a;
     border: solid 0.25px #3C9FB5;
@@ -92,10 +107,6 @@ button {
     margin-bottom: 0.25em;
     margin-right: 5em;
     padding: 1em, 1em, 1em, 1em;
-}
-
-.l_login input:invalid {
-    border: solid 1.5px #ff0000;
 }
 
 .l_login h3 {
@@ -180,4 +191,8 @@ button {
     height: 25px;
     width: 75px;
     margin-right: 1em;
+}
+
+.datetimeUTC {
+    display: none;
 }
