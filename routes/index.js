@@ -7,18 +7,17 @@ var session = require('express-session');
 
 var Note = require("./Note").Note;
 
+var db = require('./Database');
 
 //simply redirect /index to /
 router.get('/index', function (req, res, next) {
   next();
 })
 
-router.get('/', function (req, res, next) {
+router.get('/', async function (req, res) {
   if (req.session.user != null) {
-    res.render('index.ejs', 
-      { user: req.session.user.name + "'s",
-        logout_link: "<a href=\"authenticate/logout\">Logout</a>"
-      });
+    res.render('index.ejs',
+      { user: req.session.user.name + "'s" });
   } else {
     res.render('index.ejs', { user: null, logout_link: null });
   }

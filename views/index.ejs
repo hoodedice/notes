@@ -1,7 +1,10 @@
 <h1><%- user -%> NoteStash </h1>
 <nav>
-	<a href="authenticate">Sign in</a>
-	<%- logout_link -%>
+	<% if (user != null) { %>
+		<%- "<a href=\"authenticate/logout\">Logout</a>" -%>
+	<% } else { %> 
+		<%- "<a href=\"authenticate\">Sign in</a>" -%>
+	<% } %>
 </nav>
 
 <div class = "uploadbox">

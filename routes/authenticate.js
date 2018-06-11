@@ -7,23 +7,22 @@ var psw = require('./Password');
 var User = require('./User').User;
 
 router.get('/', function (req, res, next) {
-  res.render('login.ejs');
-  //console.log("login page is accessible");
+  res.render('login.ejs', { message : null });
 });
 
 async function CheckUsername(username) {
+  //TODO: make this a stored procedure on the database
   const USERNAMEquery = 'SELECT * FROM `users` WHERE `username` = ?';
   try {
-    const passwordHash = await db.connect(USERNAMEquery, [username]);
-    const rows = await passwordHash[0];
-    //console.log("rows length: " + rows.length);
-    if (rows.length == 0) {
-      //console.log("couldn't find the username");
-      return null;
-    } else if (rows.length > 1) {
-      throw new Error("something weird happened: checkUserName(): login.js");
+    const UserRow = await db.connect(USERNAMEquery, [username]);
+    const rows = await UserRow[0];
+    if (rows[0] == undefined || rows[0].length == 0) {
+      //username was not found
+      return await [null, null];
+    } else if (rows[0].length > 1) {
+      //technically will never happen in mysql since UNIQUE is properly set on the appropriate columns
+      throw new Error("more than one user returned: checkUserName(): login.js");
     } else {
-      //console.log(rows);
       const user = new User(rows[0].username, rows[0].email, rows[0].id, 
         rows[0].fname, rows[0].lname, rows[0].join_date);
       return await [rows[0].password, user];
@@ -35,32 +34,33 @@ async function CheckUsername(username) {
 
 /**login.html*/
 router.post('/login', async function (req, res) {
-
   try {
     const [hash, saveduser] = await CheckUsername(req.body.username);
     if (hash != null && saveduser != null) {
-      //username was found on the database
+      //username was found on the database, we have their password hash
       const result = await psw.comparePassword(req.body.password, hash);
-      if (result != null) {
+      if (result) {
         //credentials match, log them in
         req.session.user = saveduser;
         for (key in req.session.user) console.log(key + ": " + req.session.user[key]);
         res.redirect('/index');
       } else {
-        //password isn't present on the database
-        //TODO: indicate to the user that the password they typed in is incorrect
-        //console.log("password is incorrect");
-        res.redirect('back');
+        //incorrect password
+        res.render('login.ejs', { message: "Incorrect username or password"});
       }
     } else if (hash == null) {
       //username isn't present on the database
-      //TODO: indicate to the user that the username they typed in is incorrect
-      res.redirect('back');
+      res.render('login.ejs', { message: "Incorrect username or password"});
     } else {
-      throw new Error("Something weird happened: Router.Post: Login.js");
+      throw "Something weird happened: Router.Post: Login.js";
     }
   } catch (err) {
-    throw err;
+    res.render('error.ejs', {
+      status: 500,
+      message: err,
+      error: null,
+      stack: null
+    });
   }
 
 });
