@@ -25,7 +25,7 @@ module.exports.Note = class {
         this.indent_style = indent_style || 0;
         this.indent_size = indent_size || 4;
         this.is_private = is_private || 0;
-        this.folder = folder || { "root" : [] };
+        this.folder = folder || { "root": [] };
         this.tags = tags || "{}";
         this.title = title || "Untitled";
         this.filetype = filetype || "txt";
@@ -34,10 +34,11 @@ module.exports.Note = class {
         this.wrap_style = wrap_style || 0;
     }
 
-    //random ID generator : credits to https://stackoverflow.com/a/1349426
-    //Date().toISOString() : credits to gustorn from the Claano Collective Discord server
-    /** @private */
+    /** @private
+     *  Date().toISOString() : credits to gustorn from the Claano Collective Discord server
+     */
     getDateNow() {
+        //datetime here is set to 0 UTC offset, see documentation for .toISOString()
         let datetime = new Date().toISOString();
         return datetime.slice(0, 20);
     }
@@ -65,19 +66,28 @@ module.exports.Note = class {
             if (contents[key] == null || contents[key] === "") {
                 contents[key] = null; 
             }
-            //TODO: remove
+            //TODO: remove once language definitions have been added
             contents.language = 0;
-            //console.log(contents[key]);
         }
         return contents;
     }
 
-    /** @private */
+    /** @private
+     *  random ID generator : credits to https://stackoverflow.com/a/1349426
+     */
     generateIdentifier(DateTimeNow) {
         let DateNow = DateTimeNow.split('T', 1);
         let arrayDateNow = DateNow[0].split('-');
         DateNow = arrayDateNow.join('');
-        //console.log(DateNow);
+        console.log(DateNow);
+        let dt = "";
+        // the datetime portion of the identifier should be in DDMMYY format
+        for (let i = 8; i > 0; i-=2) {
+            dt = dt + DateNow.charAt(i);
+            dt = dt + DateNow.charAt(i+1);
+        }
+        DateNow = dt;
+        
         var identifier = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
 
@@ -87,6 +97,5 @@ module.exports.Note = class {
 
         return DateNow + identifier;
     }
-
 
 }
