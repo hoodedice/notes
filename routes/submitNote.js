@@ -10,12 +10,12 @@ async function SubmitNewNote(note, user_id) {
   const SUBMITNOTEquery = 'CALL `addNewAnonNote`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
   var inserts = note.getNoteForDB();
-  inserts.push(user_id)
+  inserts.push(user_id);
 
   try {
     const result = await db.connect(SUBMITNOTEquery, inserts);
     //console.log(result);
-    return;
+    return await true;
   } catch (err) { throw err }
 }
 
@@ -25,14 +25,17 @@ router.post('/', async function (req, res, next) {
     let note = returnNewNote(req);
     try {
       //submit note and redirect user to their submitted paste
-      if (req.session.user == null) {
+      if (note.user == null) {
         const result = await SubmitNewNote(note, 1);
         res.redirect('/anon/' + note.note_id);
       } else {
         const result = await SubmitNewNote(note, req.session.user.id);
         res.redirect('/' + req.session.user.name + '/' + note.note_id);
       }
-    } catch (err) { throw err; }
+    } catch (err) { 
+      //TODO: Handle unique note_id already existing on the database
+      throw err; 
+    }
   }
 });
 
